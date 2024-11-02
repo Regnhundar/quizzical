@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+20&family=Mr+Dafoe&family=Pixelify+Sans:wght@400..700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: grid;
+    background-color: cyan;
+    place-items: center;
+    min-width: 100svw;
+    min-height: 100svh;
+    font-family: "Jersey 20";
+    color: #222;
+}
+
+.wrapper {
+    margin: auto;
+    max-width: 1100px;
+}
+
+.main {
+    place-self: center;
+    display: grid;
+}
+
+.main__title {
+    display: grid;
+}
+
+.main__title--cursive-text {
+    color: #222;
+    font-family: "Mr Dafoe";
+    font-size: 6rem;
+    font-weight: 400;
+    text-shadow: 1px 1px white, -1px -1px white, 1px -1px white, -1px 1px white;
+    -webkit-transform: skew(-5deg, -5deg);
+    transform: skew(-5deg, -5deg);
+}
+
+.main__title--pixelated-text {
+    font-family: "Jersey 20";
+    font-weight: 600;
+    font-size: 10rem;
+    background: -webkit-linear-gradient(#F504AC, #F1FF33);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    -webkit-filter: drop-shadow(3px 3px 0 #441F62);
+    filter: drop-shadow(3px 3px 0 #441F62);
+
+}
+
+.main__enter {
+    text-decoration: none;
+}
+
+.main__image__wrapper {
+    place-self: center;
+}
+
+.main__image {
+    max-width: 100%;
+}
+
+.gameboard-options {
+    display: grid;
+}
+
+.gameboard-options__label {
+    display: grid;
+}
+
+.gameboard-options__number-of-questions {
+    cursor: pointer;
+}
+
+.main__gameboard {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.question {
+    cursor: pointer;
+    background-color: hotpink;
+    padding: 2rem;
+
+}
+
+.question__category {
+    display: grid;
+}

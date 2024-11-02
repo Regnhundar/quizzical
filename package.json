@@ -1,0 +1,13 @@
+{
+    "name": "quiz",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc && npm run copy-static",
+        "copy-static": "xcopy src\\*.html dist\\ /s /i /y && xcopy src\\styles dist\\styles\\ /s /i /y && xcopy src\\assets dist\\assets\\ /s /i /y"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}

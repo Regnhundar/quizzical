@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="../styles/style.css" />
+        <title>Game</title>
+    </head>
+    <body>
+        <div class="wrapper">
+            <main class="main">
+                <section class="main__gameboard" id="gameBoard">
+                    <form class="gameboard-options" id="setupGameForm">
+                        <label for="numberSelector" class="gameboard-options__label">
+                            NUMBER OF QUESTIONS:
+                            <input
+                                type="range"
+                                name="numberSelector"
+                                id="numberSelector"
+                                class="gameboard-options__number-of-questions"
+                                min="10"
+                                max="50"
+                                step="10" />
+                            <p class="gameboard-options__number" id="numberOfQuestions"></p
+                        ></label>
+                        <button class="gameboard-options__submit" id="optionsSubmitButton">GAME ON!</button>
+                    </form>
+                </section>
+            </main>
+        </div>
+        <script type="module" src="../index.js"></script>
+    </body>
+</html>
