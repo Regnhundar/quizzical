@@ -3,7 +3,7 @@ export function storeInSessionStorage(storageKey, dataToStore) {
 }
 export function getFromSessionStorage(storageKey) {
     const item = sessionStorage.getItem(storageKey);
-    return item ? JSON.parse(item) : null;
+    return item && JSON.parse(item);
 }
 export function removeFromSessionStorage(storageKey) {
     sessionStorage.removeItem(storageKey);

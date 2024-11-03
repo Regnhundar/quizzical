@@ -78,7 +78,7 @@ body {
     cursor: pointer;
 }
 
-.main__gameboard {
+.gameboard {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1rem;
@@ -86,11 +86,60 @@ body {
 
 .question {
     cursor: pointer;
-    background-color: hotpink;
     padding: 2rem;
-
+    box-shadow: 2px 2px 0 3px hotpink;
 }
 
 .question__category {
     display: grid;
+}
+
+.question__category--sub {
+    font-size: 1.1rem;
+}
+
+.selected-question {
+    inset: 0;
+    margin: auto;
+    padding: 2rem;
+    min-height: 20rem;
+    width: 100%;
+    max-width: 800px;
+    gap: 2rem;
+}
+
+.selected-question * {
+    margin-bottom: 2rem;
+}
+
+.selected-question::backdrop {
+    background-color: red;
+}
+
+.selected-question__question {
+    color: #222;
+    font-size: 2rem;
+}
+
+.question__answers-wrapper {
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.question__answer-label {
+    cursor: pointer;
+    display: grid;
+    color: #222;
+    font-size: 2rem;
+}
+
+.selected-question__answer-selector {
+    cursor: pointer;
+    opacity: 0;
+}
+
+.selected-question__button {
+    cursor: pointer;
 }
