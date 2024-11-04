@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Jersey+20&family=Mr+Dafoe&family=Pixelify+Sans:wght@400..700&display=swap');
 
+:root {
+    --main-font: "Jersey 20", san-serif;
+    --white-text-shadow: 1px 1px white, -1px -1px white, 1px -1px white, -1px 1px white;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -12,7 +17,7 @@ body {
     place-items: center;
     min-width: 100svw;
     min-height: 100svh;
-    font-family: "Jersey 20";
+    font-family: var(--main-font);
     color: #222;
 }
 
@@ -103,11 +108,29 @@ body {
     margin: auto;
     padding: 2rem;
     min-height: 20rem;
-
+    width: 100%;
+    max-width: 800px;
 }
+
 
 .selected-question::backdrop {
     background-color: red;
+}
+
+.selected-question__grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.selected-question__category {
+    font-size: 2.5rem;
+    background: -webkit-linear-gradient(#F504AC, #F1FF33);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    -webkit-filter: drop-shadow(2px 2px 0 #441F62);
+    filter: drop-shadow(2px 2px 0 #441F62);
 }
 
 .selected-question__question {
@@ -115,25 +138,94 @@ body {
     font-size: 2rem;
 }
 
-.question__answer-label {
-    cursor: pointer;
+.selected-question__answers-wrapper {
+    align-items: center;
     display: grid;
-    color: #222;
-    font-size: 2rem;
+    gap: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
 }
 
-.question__answer-label {
+.selected-question__answer-label {
     cursor: pointer;
     display: grid;
     color: #222;
     font-size: 2rem;
+    border: 2px solid hotpink;
+    height: 100%;
+}
+
+.selected-question__answer-selector:checked+.selected-question__answer-label--text {
+    background-color: cyan;
 }
 
 .selected-question__answer-selector {
     cursor: pointer;
     opacity: 0;
+    position: absolute;
+}
+
+.selected-question__answer-label--text {
+    padding: 1rem;
+}
+
+.selected-question__timer {
+    position: relative;
+    grid-column: 1/-1;
+    border: 2px solid rgb(161, 159, 159);
+    height: 4rem;
+    z-index: 1;
+    background: rgb(0, 255, 21);
+    background: linear-gradient(90deg, rgba(255, 0, 0, 1) 0%, rgba(249, 255, 0, 1) 50%, rgba(61, 255, 0, 1) 100%);
+    box-shadow: inset -3px -3px 0 0 rgba(0, 0, 0, 0.3), inset 3px 3px 0 0 rgba(255, 255, 255, 0.3);
+}
+
+.selected-question__timer::after {
+    position: absolute;
+    content: "";
+    z-index: 2;
+    animation: timer 10s linear forwards;
+    width: 100%;
+    height: 100%;
+    right: 0;
+    background-color: white;
+    box-shadow: -2px 0 0 0 rgba(0, 0, 0, 0.3);
+}
+
+@keyframes timer {
+    0% {
+        width: 100%;
+    }
+
+    0% {
+        width: 0%;
+    }
 }
 
 .selected-question__button {
     cursor: pointer;
+    justify-self: end;
+    align-self: center;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    font-size: 2rem;
+    font-family: var(--main-font);
+    border: 2px solid #222;
+    color: #222;
+    background-color: #f5538c;
+    box-shadow: inset 3px 3px 0 0 rgba(255, 255, 255, 0.3), inset -3px -3px 0 0 rgba(0, 0, 0, 0.3);
+    text-shadow: var(--white-text-shadow);
+}
+
+.selected-question__button:active {
+    scale: .98;
+    box-shadow: inset -3px -3px 0 0 rgba(255, 255, 255, 0.3), inset 3px 3px 0 0 rgba(0, 0, 0, 0.3);
+}
+
+.hide {
+    opacity: 0;
+}
+
+.no-touching {
+    pointer-events: none;
 }
