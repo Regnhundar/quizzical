@@ -7,7 +7,17 @@
         <title>Game</title>
     </head>
     <body>
-        <div class="wrapper">
+        <div class="wrapper" id="wrapper">
+            <header class="header d-none">
+                <form class="betting-hud">
+                    <label for="betSelector" class="gameboard-options__label">
+                        MAKE YOUR BET:
+                        <input type="range" name="bet-selector" id="betSelector" min="1" value="100" class="betting-hud__bet-selector" />
+                        <p class="betting-hud__bet-amount" id="betAmount"></p>
+                    </label>
+                </form>
+                ;
+            </header>
             <main class="main">
                 <section class="gameboard" id="gameBoard">
                     <form class="gameboard-options" id="setupGameForm">

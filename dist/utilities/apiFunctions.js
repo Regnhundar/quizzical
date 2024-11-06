@@ -7,14 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { getFromSessionStorage } from "./storageFunctions.js";
 export function fetchQuestions(amount) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (amount > 50)
                 throw new Error("Nä. Max 50 frågor får man hämta.");
-            const token = getFromSessionStorage("token");
-            const response = yield fetch(`https://opentdb.com/api.php?amount=${amount}&token=${token}`);
+            const token = sessionStorage.getItem("token");
+            const parsedToken = token && JSON.parse(token);
+            const response = yield fetch(`https://opentdb.com/api.php?amount=${amount}&token=${parsedToken}`);
             if (!response.ok)
                 throw new Error("Nä. Nä det gick inte att hämta de där frågorna.");
             const data = yield response.json();

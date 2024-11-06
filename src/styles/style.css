@@ -15,20 +15,34 @@ body {
     display: grid;
     background-color: cyan;
     place-items: center;
-    min-width: 100svw;
-    min-height: 100svh;
     font-family: var(--main-font);
     color: #222;
+    min-height: 100svh;
+    user-select: none;
 }
 
 .wrapper {
     margin: auto;
-    max-width: 1100px;
+    max-width: 1200px;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+.header {
+    min-height: 3rem;
+}
+
+.gameboard-options__label {
+    padding: 2rem;
 }
 
 .main {
-    place-self: center;
+    place-items: center;
     display: grid;
+    width: 100%;
+    padding: 1rem;
 }
 
 .main__title {
@@ -85,7 +99,9 @@ body {
 
 .gameboard {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    place-self: center;
+    width: 100%;
     gap: 1rem;
 }
 
@@ -93,6 +109,13 @@ body {
     cursor: pointer;
     padding: 2rem;
     box-shadow: 2px 2px 0 3px hotpink;
+}
+
+.question--answered {
+    cursor: default;
+    scale: .9;
+    box-shadow: 2px 2px 0 3px gray;
+    opacity: .5;
 }
 
 .question__category {
@@ -110,6 +133,7 @@ body {
     min-height: 20rem;
     width: 100%;
     max-width: 800px;
+    user-select: none;
 }
 
 
@@ -228,4 +252,8 @@ body {
 
 .no-touching {
     pointer-events: none;
+}
+
+.d-none {
+    display: none;
 }

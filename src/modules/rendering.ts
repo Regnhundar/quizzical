@@ -17,6 +17,7 @@ export function renderQuestions(): void {
         articleRef.addEventListener("click", handleQuestion);
         articleRef.classList.add("question");
         articleRef.dataset.index = `${i}`;
+        articleRef.dataset.difficulty = question.difficulty;
 
         const titleRef = document.createElement("h2");
         titleRef.classList.add("question__category");
@@ -47,6 +48,23 @@ export function renderQuestions(): void {
         gameboardRef?.appendChild(articleRef);
     });
 }
+
+// export function renderBettingHud(): void {
+//     const wrapper = document.querySelector(".wrapper") as HTMLElement;
+//     const header = document.createElement("header") as HTMLElement;
+
+//     const form = document.createElement("form") as HTMLFormElement;
+//     form.classList.add("betting-hud");
+
+//     const label = document.createElement("label") as HTMLLabelElement;
+//     label.classList.add("betting-hud__input-wrapper");
+
+//     const input = document.createElement("input") as HTMLInputElement;
+//     input.type = "range";
+//     const p = document.createElement("p") as HTMLParagraphElement;
+//     const button = document.createElement("button") as HTMLButtonElement;
+
+// }
 
 export function renderQuestion(questionInfo: Question): void {
     const gameBoard = document.querySelector("#gameBoard") as HTMLElement;

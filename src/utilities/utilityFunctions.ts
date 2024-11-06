@@ -30,3 +30,10 @@ export function fisherYatesShuffle<T>(array: T[]): T[] {
 
     return array;
 }
+
+export function getMultiplier(difficulty: string | undefined): number {
+    if (difficulty === "easy") return 1;
+    if (difficulty === "medium") return 2;
+    if (difficulty === "hard") return 3;
+    return 1;
+}

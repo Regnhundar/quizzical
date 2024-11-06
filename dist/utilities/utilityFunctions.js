@@ -22,3 +22,12 @@ export function fisherYatesShuffle(array) {
     }
     return array;
 }
+export function getMultiplier(difficulty) {
+    if (difficulty === "easy")
+        return 1;
+    if (difficulty === "medium")
+        return 2;
+    if (difficulty === "hard")
+        return 3;
+    return 1;
+}
