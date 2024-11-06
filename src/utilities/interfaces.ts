@@ -7,14 +7,17 @@ export interface Question {
     incorrect_answers: string[];
 }
 
-export interface GameData {
+export interface GameData extends ResultOfAnswer {
+    numberOfQuestions: number;
+    countDown: ReturnType<typeof setTimeout> | null; //setTimeout är type number i de flesta javascript libraries men inte alla. Därav denna lösning.
+    isGameOver: boolean;
+}
+
+export interface ResultOfAnswer {
     points: number;
     bet: number;
-    numberOfQuestions: number;
     multiplier: number;
-    countDown: ReturnType<typeof setTimeout> | null; //setTimeout är type number i de flesta javascript libraries men inte alla. Därav denna lösning.
     correct_answer: string | null;
-    isGameOver: boolean;
 }
 
 export interface QuestionResponse {

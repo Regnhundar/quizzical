@@ -1,13 +1,4 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-import { renderQuestion, renderQuestions } from "./modules/rendering.js";
+import { renderGameOver, renderQuestion, renderQuestionResult, renderQuestions } from "./modules/rendering.js";
 import { fetchQuestions, fetchSessionToken } from "./utilities/apiFunctions.js";
 import { gameData } from "./utilities/gameData.js";
 import { getFromSessionStorage, storeInSessionStorage } from "./utilities/storageFunctions.js";
@@ -21,34 +12,32 @@ window.addEventListener("DOMContentLoaded", () => {
         setBettingRange();
     }
 });
-function handleStartGame(e, input) {
-    return __awaiter(this, void 0, void 0, function* () {
-        e.preventDefault();
-        resetGameData();
-        const timeOfToken = getFromSessionStorage("timeOfToken");
-        const sixHoursInMs = 6 * 60 * 60 * 1000;
-        const isTokenTooOld = timeOfToken ? typeof timeOfToken === "string" && Date.now() - parseInt(timeOfToken) > sixHoursInMs : true;
-        if (isTokenTooOld) {
-            const token = yield fetchSessionToken();
-            if (token) {
-                storeInSessionStorage("timeOfToken", Date.now());
-                storeInSessionStorage("token", token);
-            }
+async function handleStartGame(e, input) {
+    e.preventDefault();
+    resetGameData();
+    const timeOfToken = getFromSessionStorage("timeOfToken");
+    const sixHoursInMs = 6 * 60 * 60 * 1000;
+    const isTokenTooOld = timeOfToken ? typeof timeOfToken === "string" && Date.now() - parseInt(timeOfToken) > sixHoursInMs : true;
+    if (isTokenTooOld) {
+        const token = await fetchSessionToken();
+        if (token) {
+            storeInSessionStorage("timeOfToken", Date.now());
+            storeInSessionStorage("token", token);
         }
-        const questions = yield fetchQuestions(parseInt(input));
-        if (questions) {
-            const decodedQuestions = [];
-            questions.forEach((question) => {
-                const decodedQuestion = decodeQuestion(question);
-                decodedQuestions.push(decodedQuestion);
-            });
-            storeInSessionStorage("questions", decodedQuestions);
-            const header = document.querySelector("header");
-            header.classList.remove("d-none");
-            gameData.numberOfQuestions = parseInt(input);
-            renderQuestions();
-        }
-    });
+    }
+    const questions = await fetchQuestions(parseInt(input));
+    if (questions) {
+        const decodedQuestions = [];
+        questions.forEach((question) => {
+            const decodedQuestion = decodeQuestion(question);
+            decodedQuestions.push(decodedQuestion);
+        });
+        storeInSessionStorage("questions", decodedQuestions);
+        const header = document.querySelector("header");
+        header.classList.remove("d-none");
+        gameData.numberOfQuestions = parseInt(input);
+        renderQuestions();
+    }
 }
 export function handleQuestion(event) {
     const target = event.currentTarget;
@@ -67,12 +56,10 @@ export function handleQuestion(event) {
     gameData.countDown = setTimeout(() => {
         finalAnswer();
         gameData.countDown = null;
-    }, 10000);
+    }, 40000);
 }
 export function finalAnswer() {
     const button = document.querySelector(".selected-question__button");
-    const dialog = document.querySelector("#question");
-    dialog.classList.add("no-touching");
     button.removeEventListener("click", finalAnswer);
     if (gameData.countDown) {
         clearTimeout(gameData.countDown);
@@ -93,11 +80,14 @@ export function finalAnswer() {
     if (betSelector)
         betSelector.max = gameData.points.toString();
     const timer = document.querySelector(".selected-question__timer");
-    timer === null || timer === void 0 ? void 0 : timer.classList.add("hide");
+    timer?.classList.add("hide");
+    renderQuestionResult(isCorrectAnswer);
+    checkForValidBet();
+    const totalPoints = document.querySelector("#totalPoints");
+    if (totalPoints)
+        totalPoints.textContent = gameData.points.toString();
     setTimeout(() => {
-        const dialog = document.querySelector("#question");
         checkForGameOver();
-        dialog.close();
         gameData.correct_answer = null;
     }, 3000);
 }
@@ -122,17 +112,24 @@ function setBettingRange() {
     bettingSelector.addEventListener("input", (e) => {
         const target = e.target;
         let value = parseInt(target.value);
-        if (gameData.points < value) {
-            value = gameData.points;
-        }
         gameData.bet = value;
-        betAmountDisplay.textContent = value.toString();
+        betAmountDisplay.textContent = gameData.bet.toString();
     });
 }
 function checkForGameOver() {
     const answeredQuestions = document.querySelectorAll(".question--answered");
-    if (answeredQuestions.length === gameData.numberOfQuestions || gameData.points === 0) {
+    if (answeredQuestions.length === gameData.numberOfQuestions || gameData.points < 1) {
+        renderGameOver();
         console.error("GAME OVER!");
+    }
+}
+function checkForValidBet() {
+    const bettingSelector = document.querySelector("#betSelector");
+    const betAmountDisplay = document.querySelector("#betAmount");
+    if (gameData.bet > gameData.points) {
+        gameData.bet = gameData.points;
+        bettingSelector.value = gameData.bet.toString();
+        betAmountDisplay.textContent = gameData.bet.toString();
     }
 }
 function resetGameData() {

@@ -1,4 +1,4 @@
-import { renderQuestion, renderQuestions } from "./modules/rendering.js";
+import { renderGameOver, renderQuestion, renderQuestionResult, renderQuestions } from "./modules/rendering.js";
 import { fetchQuestions, fetchSessionToken } from "./utilities/apiFunctions.js";
 import { gameData } from "./utilities/gameData.js";
 import { Question } from "./utilities/interfaces.js";
@@ -62,13 +62,12 @@ export function handleQuestion(event: MouseEvent) {
     gameData.countDown = setTimeout(() => {
         finalAnswer();
         gameData.countDown = null;
-    }, 10000);
+    }, 40000);
 }
 
 export function finalAnswer(): number | void {
     const button = document.querySelector(".selected-question__button") as HTMLButtonElement;
-    const dialog = document.querySelector("#question") as HTMLDialogElement;
-    dialog.classList.add("no-touching");
+
     button.removeEventListener("click", finalAnswer);
 
     if (gameData.countDown) {
@@ -92,10 +91,13 @@ export function finalAnswer(): number | void {
     const timer = document.querySelector(".selected-question__timer") as HTMLElement;
     timer?.classList.add("hide");
 
+    renderQuestionResult(isCorrectAnswer);
+    checkForValidBet();
+    const totalPoints = document.querySelector("#totalPoints") as HTMLHeadingElement;
+    if (totalPoints) totalPoints.textContent = gameData.points.toString();
+
     setTimeout(() => {
-        const dialog = document.querySelector("#question") as HTMLDialogElement;
         checkForGameOver();
-        dialog.close();
         gameData.correct_answer = null;
     }, 3000);
 }
@@ -123,22 +125,30 @@ function setBettingRange() {
     bettingSelector.addEventListener("input", (e) => {
         const target = e.target as HTMLInputElement;
         let value: number = parseInt(target.value);
-        if (gameData.points < value) {
-            value = gameData.points;
-        }
+
         gameData.bet = value;
-        betAmountDisplay.textContent = value.toString();
+        betAmountDisplay.textContent = gameData.bet.toString();
     });
 }
 
 function checkForGameOver() {
     const answeredQuestions: NodeListOf<HTMLElement> = document.querySelectorAll(".question--answered");
 
-    if (answeredQuestions.length === gameData.numberOfQuestions || gameData.points === 0) {
+    if (answeredQuestions.length === gameData.numberOfQuestions || gameData.points < 1) {
+        renderGameOver();
         console.error("GAME OVER!");
     }
 }
 
+function checkForValidBet() {
+    const bettingSelector = document.querySelector("#betSelector") as HTMLInputElement;
+    const betAmountDisplay = document.querySelector("#betAmount") as HTMLParagraphElement;
+    if (gameData.bet > gameData.points) {
+        gameData.bet = gameData.points;
+        bettingSelector.value = gameData.bet.toString();
+        betAmountDisplay.textContent = gameData.bet.toString();
+    }
+}
 function resetGameData(): void {
     gameData.points = 1000;
     gameData.bet = 100;

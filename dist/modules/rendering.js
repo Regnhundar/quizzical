@@ -1,4 +1,5 @@
 import { finalAnswer, handleQuestion } from "../index.js";
+import { gameData } from "../utilities/gameData.js";
 import { getFromSessionStorage } from "../utilities/storageFunctions.js";
 import { fisherYatesShuffle } from "../utilities/utilityFunctions.js";
 export function renderQuestions() {
@@ -10,7 +11,7 @@ export function renderQuestions() {
     const gameboardRef = document.querySelector("#gameBoard");
     if (gameboardRef)
         gameboardRef.innerHTML = "";
-    questions === null || questions === void 0 ? void 0 : questions.forEach((question, i) => {
+    questions?.forEach((question, i) => {
         const articleRef = document.createElement("article");
         articleRef.addEventListener("click", handleQuestion);
         articleRef.classList.add("question");
@@ -36,21 +37,9 @@ export function renderQuestions() {
         const subtitleRef = document.createElement("h3");
         subtitleRef.textContent = question.difficulty;
         articleRef.appendChild(subtitleRef);
-        gameboardRef === null || gameboardRef === void 0 ? void 0 : gameboardRef.appendChild(articleRef);
+        gameboardRef?.appendChild(articleRef);
     });
 }
-// export function renderBettingHud(): void {
-//     const wrapper = document.querySelector(".wrapper") as HTMLElement;
-//     const header = document.createElement("header") as HTMLElement;
-//     const form = document.createElement("form") as HTMLFormElement;
-//     form.classList.add("betting-hud");
-//     const label = document.createElement("label") as HTMLLabelElement;
-//     label.classList.add("betting-hud__input-wrapper");
-//     const input = document.createElement("input") as HTMLInputElement;
-//     input.type = "range";
-//     const p = document.createElement("p") as HTMLParagraphElement;
-//     const button = document.createElement("button") as HTMLButtonElement;
-// }
 export function renderQuestion(questionInfo) {
     const gameBoard = document.querySelector("#gameBoard");
     const existingDialog = document.querySelector("#question");
@@ -105,4 +94,80 @@ export function renderQuestion(questionInfo) {
     wrapper.appendChild(grid);
     gameBoard.appendChild(wrapper);
     wrapper.showModal();
+}
+export function renderQuestionResult(isCorrect) {
+    const resultInfo = {
+        correct_answer: gameData.correct_answer,
+        bet: gameData.bet,
+        multiplier: gameData.multiplier,
+        points: gameData.points,
+    };
+    // const paragraphElement = document.createElement("h3") as HTMLHeadingElement;
+    const dialogContentWrapper = document.querySelector(".selected-question__grid");
+    dialogContentWrapper.innerHTML = "";
+    const titleElement = document.createElement("h2");
+    titleElement.classList.add("recap-title");
+    const list = document.createElement("ul");
+    list.classList.add("question-recap");
+    const entries = Object.entries(resultInfo);
+    entries.forEach((entry, i) => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("question-recap__list-item");
+        const listItemTitle = document.createElement("h3");
+        listItemTitle.id = `recapTitle${i}`;
+        listItemTitle.classList.add("question-recap__title");
+        const listItemParagraph = document.createElement("p");
+        listItemParagraph.textContent = entry[1].toString();
+        listItemParagraph.id = `recapParagraph${i}`;
+        listItemParagraph.classList.add("question-recap__paragraph");
+        listItem.appendChild(listItemTitle);
+        listItem.appendChild(listItemParagraph);
+        list.appendChild(listItem);
+    });
+    const button = document.createElement("button");
+    button.textContent = "CLOSE";
+    button.classList.add("question-recap__button");
+    button.addEventListener("click", () => {
+        const dialog = document.querySelector("#question");
+        dialog.close();
+    });
+    dialogContentWrapper.appendChild(titleElement);
+    dialogContentWrapper.appendChild(list);
+    dialogContentWrapper.appendChild(button);
+    const firstTitle = document.querySelector("#recapTitle0");
+    const secondTitle = document.querySelector("#recapTitle1");
+    const thirdTitle = document.querySelector("#recapTitle2");
+    const fourthTitle = document.querySelector("#recapTitle3");
+    firstTitle.textContent = "CORRECT ANSWER:";
+    secondTitle.textContent = "YOU BET:";
+    thirdTitle.textContent = "MULTIPLIER:";
+    fourthTitle.textContent = "YOUR POINTS NOW:";
+    if (isCorrect) {
+        titleElement.textContent = "CORRECT!";
+        titleElement.classList.add("recap-title--green");
+    }
+    else {
+        titleElement.textContent = "INCORRECT!";
+        titleElement.classList.add("recap-title--red");
+    }
+}
+export function renderGameOver() {
+    const main = document.querySelector(".main");
+    main.innerHTML = "";
+    const header = document.querySelector(".header");
+    header.classList.add("d-none");
+    const figure = document.createElement("figure");
+    figure.classList.add("game-over");
+    const button = document.createElement("button");
+    button.textContent = "PLAY AGAIN!";
+    button.classList.add("game-over__button");
+    button.addEventListener("click", () => {
+        location.reload();
+    });
+    const title = document.createElement("h1");
+    title.classList.add("game-over__title");
+    title.textContent = "GAME OVER!";
+    figure.appendChild(title);
+    figure.appendChild(button);
+    main.appendChild(figure);
 }

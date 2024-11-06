@@ -23,6 +23,7 @@ body {
 
 .wrapper {
     margin: auto;
+    padding: 0 2rem;
     max-width: 1200px;
     width: 100%;
     height: 100%;
@@ -32,10 +33,31 @@ body {
 
 .header {
     min-height: 3rem;
+    padding: 2rem 0;
+    gap: 5rem;
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
 }
 
-.gameboard-options__label {
-    padding: 2rem;
+.betting-hud,
+.points {
+    display: grid;
+    max-width: 25rem;
+    width: 100%;
+    height: 100%;
+}
+
+.points {
+    width: fit-content;
+}
+
+.points__title {
+    font-weight: 400;
+    font-size: 2rem;
+    max-width: fit-content;
+    display: inline;
 }
 
 .main {
@@ -43,6 +65,7 @@ body {
     display: grid;
     width: 100%;
     padding: 1rem;
+    grid-row: span 2;
 }
 
 .main__title {
@@ -52,17 +75,21 @@ body {
 .main__title--cursive-text {
     color: #222;
     font-family: "Mr Dafoe";
-    font-size: 6rem;
+    font-size: clamp(3rem, 13vw, 6rem);
     font-weight: 400;
     text-shadow: 1px 1px white, -1px -1px white, 1px -1px white, -1px 1px white;
     -webkit-transform: skew(-5deg, -5deg);
     transform: skew(-5deg, -5deg);
 }
 
-.main__title--pixelated-text {
+.main__title--pixelated-text,
+.game-over__title,
+.points__amount {
+    max-width: fit-content;
+    display: inline;
     font-family: "Jersey 20";
     font-weight: 600;
-    font-size: 10rem;
+    font-size: clamp(3rem, 20vw, 10rem);
     background: -webkit-linear-gradient(#F504AC, #F1FF33);
     -webkit-background-clip: text;
     background-clip: text;
@@ -70,7 +97,6 @@ body {
     text-shadow: none;
     -webkit-filter: drop-shadow(3px 3px 0 #441F62);
     filter: drop-shadow(3px 3px 0 #441F62);
-
 }
 
 .main__enter {
@@ -83,19 +109,89 @@ body {
 
 .main__image {
     max-width: 100%;
+    aspect-ratio: 323/771;
+    width: clamp(12rem, 35vw, 20rem);
 }
 
 .gameboard-options {
+    place-self: center;
     display: grid;
+    width: 100%;
+    max-width: 25rem;
 }
 
 .gameboard-options__label {
     display: grid;
+
+    gap: 1rem;
+
+    font-size: 2rem;
 }
 
-.gameboard-options__number-of-questions {
-    cursor: pointer;
+.gameboard-options__number,
+.betting-hud__bet-amount {
+    justify-self: end;
+    align-self: center;
 }
+
+/*********** Baseline, reset styles ***********/
+.gameboard-options__number-of-questions,
+.betting-hud__bet-selector {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    max-width: 25rem;
+    width: 100%;
+}
+
+
+.gameboard-options__number-of-questions:focus,
+.betting-hud__bet-selector:focus {
+    outline: none;
+}
+
+/******** Chrome, Safari, Opera and Edge Chromium styles ********/
+
+.gameboard-options__number-of-questions::-webkit-slider-runnable-track,
+.betting-hud__bet-selector::-webkit-slider-runnable-track {
+    background-color: #f504ac;
+    border-radius: 0rem;
+    height: 1rem;
+}
+
+
+.gameboard-options__number-of-questions::-webkit-slider-thumb,
+.betting-hud__bet-selector::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -12px;
+    background-color: #000222;
+    border-radius: 0rem;
+    height: 2.5rem;
+    width: 1.5rem;
+}
+
+/*********** Firefox styles ***********/
+
+.gameboard-options__number-of-questions::-moz-range-track,
+.betting-hud__bet-selector::-moz-range-track {
+    background-color: #f504ac;
+    border-radius: 0rem;
+    height: 1rem;
+}
+
+
+.gameboard-options__number-of-questions::-moz-range-thumb,
+.betting-hud__bet-selector::-moz-range-thumb {
+    background-color: #000222;
+    border: none;
+    border-radius: 0rem;
+    height: 2.5rem;
+    width: 1.5rem;
+}
+
+
 
 .gameboard {
     display: grid;
@@ -131,14 +227,14 @@ body {
     margin: auto;
     padding: 2rem;
     min-height: 20rem;
-    width: 100%;
     max-width: 800px;
     user-select: none;
+    overflow: hidden;
 }
 
 
 .selected-question::backdrop {
-    background-color: red;
+    background-color: cyan;
 }
 
 .selected-question__grid {
@@ -180,7 +276,7 @@ body {
 }
 
 .selected-question__answer-selector:checked+.selected-question__answer-label--text {
-    background-color: cyan;
+    background-color: hotpink;
 }
 
 .selected-question__answer-selector {
@@ -196,7 +292,7 @@ body {
 .selected-question__timer {
     position: relative;
     grid-column: 1/-1;
-    border: 2px solid rgb(161, 159, 159);
+    border: 2px solid #000222;
     height: 4rem;
     z-index: 1;
     background: rgb(0, 255, 21);
@@ -208,7 +304,7 @@ body {
     position: absolute;
     content: "";
     z-index: 2;
-    animation: timer 10s linear forwards;
+    animation: timer 40s linear forwards;
     width: 100%;
     height: 100%;
     right: 0;
@@ -217,16 +313,23 @@ body {
 }
 
 @keyframes timer {
-    0% {
+    to {
         width: 100%;
     }
 
-    0% {
+    from {
         width: 0%;
     }
 }
 
-.selected-question__button {
+.gameboard-options__submit {
+    margin-top: 3rem;
+}
+
+.selected-question__button,
+.gameboard-options__submit,
+.game-over__button,
+.question-recap__button {
     cursor: pointer;
     justify-self: end;
     align-self: center;
@@ -241,17 +344,121 @@ body {
     text-shadow: var(--white-text-shadow);
 }
 
-.selected-question__button:active {
+.selected-question__button:active,
+.gameboard-options__submit:active,
+.game-over__button:active,
+.question-recap__button:active {
     scale: .98;
     box-shadow: inset -3px -3px 0 0 rgba(255, 255, 255, 0.3), inset 3px 3px 0 0 rgba(0, 0, 0, 0.3);
+}
+
+.recap-title {
+    font-size: 3.5rem;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    letter-spacing: 1px;
+}
+
+.recap-title--green {
+    background: -webkit-linear-gradient(#04f514, #06910f);
+    -webkit-filter: drop-shadow(2px 2px 0 #023405);
+    filter: drop-shadow(2px 2px 0 #023405);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.recap-title--red {
+    background: -webkit-linear-gradient(#ff0101, #ad0808);
+    -webkit-filter: drop-shadow(2px 2px 0 #2e0202);
+    filter: drop-shadow(2px 2px 0 #2e0202);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+
+.question-recap {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.question-recap,
+.recap-title,
+.question-recap__button {
+
+    animation: answer 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+
+@keyframes answer {
+    from {
+        scale: 0;
+        opacity: 0;
+        place-items: end;
+    }
+
+    to {
+        scale: 1;
+        opacity: 1;
+        place-items: start;
+    }
+}
+
+.question-recap__list-item {
+    list-style: none;
+    display: grid;
+    gap: .5rem;
+}
+
+.question-recap__title {
+    font-size: 3rem;
+}
+
+.question-recap__paragraph {
+    font-size: 2rem;
+}
+
+.game-over {
+    display: grid;
+    gap: 4rem;
 }
 
 .hide {
     opacity: 0;
 }
 
-.no-touching {
-    pointer-events: none;
+@media screen and (max-width:500px) {
+    .wrapper {
+        padding: 0 .5rem;
+    }
+
+    .header {
+        gap: 2rem;
+
+    }
+
+    .betting-hud {
+        place-self: center start;
+    }
+
+    .points {
+        place-self: center end;
+    }
+
+    .selected-question {
+        padding: 2rem .5rem;
+    }
+
+    .selected-question__answers-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+    }
+
+    .question-recap {
+
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+    }
 }
 
 .d-none {
