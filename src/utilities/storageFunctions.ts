@@ -4,7 +4,7 @@ export function storeInSessionStorage(storageKey: string, dataToStore: Question[
 }
 
 export function getFromSessionStorage(storageKey: string): Question[] | string {
-    const item = sessionStorage.getItem(storageKey);
+    const item: string | null = sessionStorage.getItem(storageKey);
     return item && JSON.parse(item);
 }
 

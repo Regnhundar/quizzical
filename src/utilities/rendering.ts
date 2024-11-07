@@ -1,37 +1,37 @@
 import { checkForGameOver, finalAnswer, handleQuestion } from "../index.js";
-import { gameData } from "../utilities/gameData.js";
-import { HighScore, Question, ResultOfAnswer } from "../utilities/interfaces.js";
-import { getFromSessionStorage } from "../utilities/storageFunctions.js";
-import { checkForHighScore, enterHighScore, fisherYatesShuffle, setupHighScores } from "../utilities/utilityFunctions.js";
+import { gameData } from "./gameData.js";
+import { HighScore, Question, ResultOfAnswer } from "./interfaces.js";
+import { getFromSessionStorage } from "./storageFunctions.js";
+import { checkForHighScore, enterHighScore, fisherYatesShuffle, setupHighScores } from "./utilityFunctions.js";
 
 export function renderQuestions(): void {
-    const questions = getFromSessionStorage("questions");
+    const questions: string | Question[] = getFromSessionStorage("questions");
 
     if (!questions || !Array.isArray(questions)) {
         console.error("Questions is not an array or is null.");
         return;
     }
-    const gameboardRef = document.querySelector("#gameBoard");
+    const gameboardRef = document.querySelector("#gameBoard") as HTMLElement;
     if (gameboardRef) gameboardRef.innerHTML = "";
     questions?.forEach((question, i) => {
-        const articleRef = document.createElement("article");
+        const articleRef = document.createElement("article") as HTMLElement;
         articleRef.addEventListener("click", handleQuestion);
         articleRef.classList.add("question");
         articleRef.dataset.index = `${i}`;
         articleRef.dataset.difficulty = question.difficulty;
 
-        const titleRef = document.createElement("h2");
+        const titleRef = document.createElement("h2") as HTMLHeadingElement;
         titleRef.classList.add("question__category");
 
         if (question.category.includes(":")) {
-            const [mainCategory, subCategory] = question.category.split(/:(.+)/);
-            const mainCategorySpanRef = document.createElement("span");
+            const [mainCategory, subCategory]: string[] = question.category.split(/:(.+)/);
+            const mainCategorySpanRef = document.createElement("span") as HTMLSpanElement;
             mainCategorySpanRef.classList.add("question__category--main");
             mainCategorySpanRef.textContent = mainCategory + ":";
 
             titleRef.appendChild(mainCategorySpanRef);
 
-            const subCategorySpanRef = document.createElement("span");
+            const subCategorySpanRef = document.createElement("span") as HTMLSpanElement;
             subCategorySpanRef.classList.add("question__category--sub");
             subCategorySpanRef.textContent = " " + subCategory.trim();
 
@@ -41,7 +41,7 @@ export function renderQuestions(): void {
         }
         articleRef.appendChild(titleRef);
 
-        const subtitleRef = document.createElement("h3");
+        const subtitleRef = document.createElement("h3") as HTMLHeadingElement;
         subtitleRef.textContent = question.difficulty;
 
         articleRef.appendChild(subtitleRef);
@@ -53,7 +53,7 @@ export function renderQuestions(): void {
 export function renderQuestion(questionInfo: Question): void {
     const gameBoard = document.querySelector("#gameBoard") as HTMLElement;
 
-    const existingDialog = document.querySelector("#question");
+    const existingDialog = document.querySelector("#question") as HTMLDialogElement;
     existingDialog && existingDialog.remove();
 
     const wrapper = document.createElement("dialog") as HTMLDialogElement;
@@ -67,7 +67,6 @@ export function renderQuestion(questionInfo: Question): void {
     category.textContent = questionInfo.category;
     category.classList.add("selected-question__category");
     grid.appendChild(category);
-    // const amount = document.createElement("h3") as HTMLHeadingElement;
     const question = document.createElement("p") as HTMLParagraphElement;
     question.textContent = questionInfo.question;
     question.classList.add("selected-question__question");
@@ -81,7 +80,7 @@ export function renderQuestion(questionInfo: Question): void {
         answers.push(answer);
     });
 
-    const shuffledAnswers = fisherYatesShuffle(answers);
+    const shuffledAnswers: string[] = fisherYatesShuffle(answers);
 
     shuffledAnswers.forEach((answer, i) => {
         const answerLabel = document.createElement("label") as HTMLLabelElement;
@@ -165,7 +164,7 @@ export function renderQuestionResult(isCorrect: boolean): void {
     button.classList.add("question-recap__button");
     button.addEventListener("click", () => {
         const dialog = document.querySelector("#question") as HTMLDialogElement;
-        const answeredQuestion = document.querySelector(`article[data-index="${gameData.answeredQuestion}"]`);
+        const answeredQuestion = document.querySelector(`article[data-index="${gameData.answeredQuestion}"]`) as HTMLElement;
         answeredQuestion?.classList.add("question--answered");
         checkForGameOver();
         dialog.close();
@@ -213,7 +212,7 @@ export function renderGameOver(): void {
     let highScoreWrapper;
     if (isHighScore) {
         title.textContent = "NEW HIGH SCORE!";
-        highScoreWrapper = document.createElement("div");
+        highScoreWrapper = document.createElement("div") as HTMLDivElement;
         highScoreWrapper.classList.add("game-over__input-wrapper");
         const enterName = document.createElement("input") as HTMLInputElement;
         enterName.placeholder = "ENTER NAME";
@@ -248,7 +247,7 @@ export function renderGameOver(): void {
 }
 
 export function renderHighScores(): void {
-    let highScores = localStorage.getItem("highScores");
+    let highScores: string | null = localStorage.getItem("highScores");
     if (!highScores) {
         setupHighScores();
         highScores = localStorage.getItem("highScores");
