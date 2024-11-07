@@ -23,6 +23,7 @@ export function fisherYatesShuffle(array) {
     }
     return array;
 }
+// Ger scoremultiplier beroende på svårighetsgrad av frågor.
 export function getMultiplier(difficulty) {
     if (difficulty === "easy")
         return 1;

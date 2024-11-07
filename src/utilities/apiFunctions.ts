@@ -3,8 +3,8 @@ import { Question, QuestionResponse, TokenResponse } from "./interfaces.js";
 export async function fetchQuestions(amount: number): Promise<Question[] | void> {
     try {
         if (amount > 50) throw new Error("Nä. Max 50 frågor får man hämta.");
-        const token = sessionStorage.getItem("token");
-        const parsedToken = token && JSON.parse(token);
+        const token: string | null = sessionStorage.getItem("token");
+        const parsedToken: string | null = token && JSON.parse(token);
         const response: Response = await fetch(`https://opentdb.com/api.php?amount=${amount}&token=${parsedToken}`);
         if (!response.ok) throw new Error("Nä. Nä det gick inte att hämta de där frågorna.");
         const data: QuestionResponse = await response.json();
