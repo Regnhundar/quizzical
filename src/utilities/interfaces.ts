@@ -6,3 +6,31 @@ export interface Question {
     correct_answer: string;
     incorrect_answers: string[];
 }
+
+export interface GameData extends ResultOfAnswer {
+    numberOfQuestions: number;
+    countDown: ReturnType<typeof setTimeout> | null; //setTimeout är type number i de flesta javascript libraries men inte alla. Därav denna lösning.
+    answeredQuestion: string | null;
+}
+
+export interface ResultOfAnswer {
+    points: number;
+    bet: number;
+    multiplier: number;
+    correct_answer: string | null;
+}
+
+export interface QuestionResponse {
+    response_code: number;
+    results: Question[];
+}
+
+export interface TokenResponse {
+    response_code: number;
+    response_message: string;
+    token: string;
+}
+export interface HighScore {
+    name: string;
+    score: number;
+}
