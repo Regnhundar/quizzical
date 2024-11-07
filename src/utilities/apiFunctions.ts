@@ -17,8 +17,6 @@ export async function fetchQuestions(amount: number): Promise<Question[] | void>
 
 export async function fetchSessionToken(): Promise<string | void> {
     try {
-        console.log("Tokenfetch");
-
         const response: Response = await fetch("https://opentdb.com/api_token.php?command=request");
         if (!response.ok) throw new Error("Nä. Nä det gick inte att hämta en token.");
         const data: TokenResponse = await response.json();

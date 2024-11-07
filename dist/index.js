@@ -37,13 +37,13 @@ async function handleStartGame(e, input) {
         const header = document.querySelector("header");
         header.classList.remove("d-none");
         gameData.numberOfQuestions = parseInt(input);
+        document.querySelector(".high-scores")?.classList.add("d-none");
         renderQuestions();
     }
 }
 export function handleQuestion(event) {
     const target = event.currentTarget;
     const index = target.dataset.index;
-    console.log("index", index);
     const difficulty = target.dataset.difficulty;
     const questions = sessionStorage.getItem("questions");
     if (questions && index) {

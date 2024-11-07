@@ -102,8 +102,6 @@ export function renderQuestionResult(isCorrect) {
         multiplier: gameData.multiplier,
         points: gameData.points,
     };
-    console.log("resultInfo", resultInfo);
-    // const paragraphElement = document.createElement("h3") as HTMLHeadingElement;
     const dialogContentWrapper = document.querySelector(".selected-question__grid");
     dialogContentWrapper.innerHTML = "";
     const titleElement = document.createElement("h2");
@@ -118,7 +116,6 @@ export function renderQuestionResult(isCorrect) {
         listItemTitle.id = `recapTitle${i}`;
         listItemTitle.classList.add("question-recap__title");
         const listItemParagraph = document.createElement("p");
-        console.log("entry[1]:", entry[1]);
         if (entry[1]) {
             listItemParagraph.textContent = entry[1].toString();
         }
@@ -223,19 +220,34 @@ export function renderHighScores() {
     highScoresList.classList.add("high-scores");
     const highScoresTitle = document.createElement("h2");
     highScoresTitle.classList.add("high-scores__title");
-    highScoresTitle.textContent = "HIGH SCORES:";
+    highScoresTitle.textContent = "HIGH SCORES";
     highScoresList.appendChild(highScoresTitle);
-    sortedHighScores.forEach((highscore) => {
+    const categoryWrapper = document.createElement("div");
+    categoryWrapper.classList.add("high-scores__category-wrapper");
+    const categoryRank = document.createElement("h3");
+    categoryRank.classList.add("high-scores__category-rank");
+    categoryRank.textContent = "RANK";
+    const categoryName = document.createElement("h3");
+    categoryName.classList.add("high-scores__category-name");
+    categoryName.textContent = "NAME";
+    const categoryScore = document.createElement("h3");
+    categoryScore.classList.add("high-scores__category-score");
+    categoryScore.textContent = "SCORE";
+    categoryWrapper.append(categoryRank, categoryName, categoryScore);
+    highScoresList.appendChild(categoryWrapper);
+    sortedHighScores.forEach((highscore, i) => {
         const highScoreListItem = document.createElement("li");
         highScoreListItem.classList.add("high-score__list-item");
+        const highScoreRank = document.createElement("h3");
+        highScoreRank.classList.add("high-scores__score-rank");
+        highScoreRank.textContent = `${i + 1}.`.toString();
         const highScoreTitle = document.createElement("h3");
         highScoreTitle.classList.add("high-scores__score-name");
         highScoreTitle.textContent = highscore.name;
-        const highScoreScore = document.createElement("p");
+        const highScoreScore = document.createElement("h3");
         highScoreScore.classList.add("high-scores__score");
         highScoreScore.textContent = highscore.score.toString();
-        highScoreListItem.appendChild(highScoreTitle);
-        highScoreListItem.appendChild(highScoreScore);
+        highScoreListItem.append(highScoreRank, highScoreTitle, highScoreScore);
         highScoresList.appendChild(highScoreListItem);
     });
     const main = document.querySelector(".main");

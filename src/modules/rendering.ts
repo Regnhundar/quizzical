@@ -131,9 +131,7 @@ export function renderQuestionResult(isCorrect: boolean): void {
         multiplier: gameData.multiplier,
         points: gameData.points,
     };
-    console.log("resultInfo", resultInfo);
 
-    // const paragraphElement = document.createElement("h3") as HTMLHeadingElement;
     const dialogContentWrapper = document.querySelector(".selected-question__grid") as HTMLDivElement;
     dialogContentWrapper.innerHTML = "";
     const titleElement = document.createElement("h2") as HTMLHeadingElement;
@@ -149,7 +147,6 @@ export function renderQuestionResult(isCorrect: boolean): void {
         listItemTitle.id = `recapTitle${i}`;
         listItemTitle.classList.add("question-recap__title");
         const listItemParagraph = document.createElement("p") as HTMLParagraphElement;
-        console.log("entry[1]:", entry[1]);
         if (entry[1]) {
             listItemParagraph.textContent = entry[1].toString();
         } else {
@@ -263,20 +260,37 @@ export function renderHighScores(): void {
     highScoresList.classList.add("high-scores");
     const highScoresTitle = document.createElement("h2") as HTMLHeadingElement;
     highScoresTitle.classList.add("high-scores__title");
-    highScoresTitle.textContent = "HIGH SCORES:";
+    highScoresTitle.textContent = "HIGH SCORES";
     highScoresList.appendChild(highScoresTitle);
-    sortedHighScores.forEach((highscore: HighScore) => {
+    const categoryWrapper = document.createElement("div") as HTMLDivElement;
+    categoryWrapper.classList.add("high-scores__category-wrapper");
+    const categoryRank = document.createElement("h3") as HTMLHeadingElement;
+    categoryRank.classList.add("high-scores__category-rank");
+    categoryRank.textContent = "RANK";
+    const categoryName = document.createElement("h3") as HTMLHeadingElement;
+    categoryName.classList.add("high-scores__category-name");
+    categoryName.textContent = "NAME";
+    const categoryScore = document.createElement("h3") as HTMLHeadingElement;
+    categoryScore.classList.add("high-scores__category-score");
+    categoryScore.textContent = "SCORE";
+    categoryWrapper.append(categoryRank, categoryName, categoryScore);
+    highScoresList.appendChild(categoryWrapper);
+    sortedHighScores.forEach((highscore: HighScore, i: number) => {
         const highScoreListItem = document.createElement("li") as HTMLLIElement;
+
         highScoreListItem.classList.add("high-score__list-item");
+        const highScoreRank = document.createElement("h3") as HTMLHeadingElement;
+        highScoreRank.classList.add("high-scores__score-rank");
+        highScoreRank.textContent = `${i + 1}.`.toString();
         const highScoreTitle = document.createElement("h3") as HTMLHeadingElement;
         highScoreTitle.classList.add("high-scores__score-name");
         highScoreTitle.textContent = highscore.name;
-        const highScoreScore = document.createElement("p") as HTMLParagraphElement;
+        const highScoreScore = document.createElement("h3") as HTMLHeadingElement;
         highScoreScore.classList.add("high-scores__score");
         highScoreScore.textContent = highscore.score.toString();
 
-        highScoreListItem.appendChild(highScoreTitle);
-        highScoreListItem.appendChild(highScoreScore);
+        highScoreListItem.append(highScoreRank, highScoreTitle, highScoreScore);
+
         highScoresList.appendChild(highScoreListItem);
     });
     const main = document.querySelector(".main") as HTMLElement;

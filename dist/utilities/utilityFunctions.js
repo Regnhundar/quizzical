@@ -44,11 +44,11 @@ export function setupHighScores() {
     const highScores = localStorage.getItem("highScores");
     if (!highScores) {
         const dummyData = [
-            { name: "PaellaPulis", score: 5 },
-            { name: "BaldFraud", score: 4 },
-            { name: "SpecialOne", score: 3 },
-            { name: "BigSam", score: 2 },
-            { name: "ErikTenGames", score: 1 },
+            { name: "PaellaPulis", score: 1200 },
+            { name: "BaldFraud", score: 1100 },
+            { name: "SpecialOne", score: 900 },
+            { name: "KloppsTeeth", score: 700 },
+            { name: "ErikTenGames", score: 500 },
         ];
         localStorage.setItem("highScores", JSON.stringify(dummyData));
         return;

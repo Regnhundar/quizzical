@@ -41,6 +41,7 @@ async function handleStartGame(e: MouseEvent, input: string): Promise<void> {
         const header = document.querySelector("header") as HTMLElement;
         header.classList.remove("d-none");
         gameData.numberOfQuestions = parseInt(input);
+        document.querySelector<HTMLOListElement>(".high-scores")?.classList.add("d-none");
         renderQuestions();
     }
 }
@@ -48,7 +49,6 @@ async function handleStartGame(e: MouseEvent, input: string): Promise<void> {
 export function handleQuestion(event: MouseEvent) {
     const target = event.currentTarget as HTMLElement;
     const index: string | undefined = target.dataset.index;
-    console.log("index", index);
 
     const difficulty: string | undefined = target.dataset.difficulty;
     const questions: string | null = sessionStorage.getItem("questions");
