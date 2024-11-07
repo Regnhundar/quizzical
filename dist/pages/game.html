@@ -4,12 +4,26 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="../styles/style.css" />
-        <title>Game</title>
+        <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
+        <title>Quizzical: GAME ON!</title>
     </head>
     <body>
-        <div class="wrapper">
+        <div class="wrapper" id="wrapper">
+            <header class="header d-none">
+                <form class="betting-hud">
+                    <label for="betSelector" class="gameboard-options__label">
+                        MAKE YOUR BET:
+                        <input type="range" name="bet-selector" id="betSelector" min="1" value="100" class="betting-hud__bet-selector" />
+                        <p class="betting-hud__bet-amount" id="betAmount"></p>
+                    </label>
+                </form>
+                <div class="points">
+                    <h2 class="points__title">POINTS:</h2>
+                    <h3 class="points__amount" id="totalPoints">1000</h3>
+                </div>
+            </header>
             <main class="main">
-                <section class="main__gameboard" id="gameBoard">
+                <section class="gameboard" id="gameBoard">
                     <form class="gameboard-options" id="setupGameForm">
                         <label for="numberSelector" class="gameboard-options__label">
                             NUMBER OF QUESTIONS:
