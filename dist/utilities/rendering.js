@@ -1,7 +1,7 @@
 import { checkForGameOver, finalAnswer, handleQuestion } from "../index.js";
-import { gameData } from "../utilities/gameData.js";
-import { getFromSessionStorage } from "../utilities/storageFunctions.js";
-import { checkForHighScore, enterHighScore, fisherYatesShuffle, setupHighScores } from "../utilities/utilityFunctions.js";
+import { gameData } from "./gameData.js";
+import { getFromSessionStorage } from "./storageFunctions.js";
+import { checkForHighScore, enterHighScore, fisherYatesShuffle, setupHighScores } from "./utilityFunctions.js";
 export function renderQuestions() {
     const questions = getFromSessionStorage("questions");
     if (!questions || !Array.isArray(questions)) {

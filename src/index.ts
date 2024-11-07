@@ -1,4 +1,4 @@
-import { renderGameOver, renderHighScores, renderQuestion, renderQuestionResult, renderQuestions } from "./modules/rendering.js";
+import { renderGameOver, renderHighScores, renderQuestion, renderQuestionResult, renderQuestions } from "./utilities/rendering.js";
 import { fetchQuestions, fetchSessionToken } from "./utilities/apiFunctions.js";
 import { gameData } from "./utilities/gameData.js";
 import { Question } from "./utilities/interfaces.js";
