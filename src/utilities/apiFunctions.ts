@@ -2,7 +2,6 @@ import { Question, QuestionResponse, TokenResponse } from "./interfaces.js";
 
 export async function fetchQuestions(amount: number): Promise<Question[] | void> {
     try {
-        console.log("questionfetch");
         if (amount > 50) throw new Error("Nä. Max 50 frågor får man hämta.");
         const token = sessionStorage.getItem("token");
         const parsedToken = token && JSON.parse(token);

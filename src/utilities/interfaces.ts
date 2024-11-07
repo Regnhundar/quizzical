@@ -10,7 +10,7 @@ export interface Question {
 export interface GameData extends ResultOfAnswer {
     numberOfQuestions: number;
     countDown: ReturnType<typeof setTimeout> | null; //setTimeout är type number i de flesta javascript libraries men inte alla. Därav denna lösning.
-    isGameOver: boolean;
+    answeredQuestion: string | null;
 }
 
 export interface ResultOfAnswer {
@@ -29,4 +29,8 @@ export interface TokenResponse {
     response_code: number;
     response_message: string;
     token: string;
+}
+export interface HighScore {
+    name: string;
+    score: number;
 }

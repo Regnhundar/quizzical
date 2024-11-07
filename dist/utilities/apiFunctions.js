@@ -1,6 +1,5 @@
 export async function fetchQuestions(amount) {
     try {
-        console.log("questionfetch");
         if (amount > 50)
             throw new Error("Nä. Max 50 frågor får man hämta.");
         const token = sessionStorage.getItem("token");

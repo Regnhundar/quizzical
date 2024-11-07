@@ -1,15 +1,16 @@
-import { renderGameOver, renderQuestion, renderQuestionResult, renderQuestions } from "./modules/rendering.js";
+import { renderGameOver, renderHighScores, renderQuestion, renderQuestionResult, renderQuestions } from "./modules/rendering.js";
 import { fetchQuestions, fetchSessionToken } from "./utilities/apiFunctions.js";
 import { gameData } from "./utilities/gameData.js";
 import { getFromSessionStorage, storeInSessionStorage } from "./utilities/storageFunctions.js";
-import { decodeQuestion, getMultiplier } from "./utilities/utilityFunctions.js";
+import { decodeQuestion, getMultiplier, resetGameData, setupHighScores } from "./utilities/utilityFunctions.js";
 window.addEventListener("DOMContentLoaded", () => {
     if (document.location.pathname.endsWith("/")) {
-        console.log("Hemma");
+        setupHighScores();
     }
     if (document.location.pathname.endsWith("game.html")) {
         setAmountOfQuestions();
         setBettingRange();
+        renderHighScores();
     }
 });
 async function handleStartGame(e, input) {
@@ -42,6 +43,7 @@ async function handleStartGame(e, input) {
 export function handleQuestion(event) {
     const target = event.currentTarget;
     const index = target.dataset.index;
+    console.log("index", index);
     const difficulty = target.dataset.difficulty;
     const questions = sessionStorage.getItem("questions");
     if (questions && index) {
@@ -51,12 +53,13 @@ export function handleQuestion(event) {
         gameData.multiplier = getMultiplier(difficulty);
         renderQuestion(selectedQuestion);
     }
-    target.classList.add("question--answered");
+    if (index)
+        gameData.answeredQuestion = index;
     target.removeEventListener("click", handleQuestion);
     gameData.countDown = setTimeout(() => {
         finalAnswer();
         gameData.countDown = null;
-    }, 40000);
+    }, 15000);
 }
 export function finalAnswer() {
     const button = document.querySelector(".selected-question__button");
@@ -70,11 +73,9 @@ export function finalAnswer() {
     const isCorrectAnswer = selectedAnswer === gameData.correct_answer;
     if (isCorrectAnswer) {
         gameData.points = gameData.points += gameData.bet * gameData.multiplier;
-        console.log("Correct!", gameData.points);
     }
     else {
         gameData.points = gameData.points - gameData.bet;
-        console.log("Incorrect!", gameData.points);
     }
     const betSelector = document.querySelector("#betSelector");
     if (betSelector)
@@ -86,10 +87,6 @@ export function finalAnswer() {
     const totalPoints = document.querySelector("#totalPoints");
     if (totalPoints)
         totalPoints.textContent = gameData.points.toString();
-    setTimeout(() => {
-        checkForGameOver();
-        gameData.correct_answer = null;
-    }, 3000);
 }
 function setAmountOfQuestions() {
     const value = document.querySelector("#numberOfQuestions");
@@ -116,11 +113,10 @@ function setBettingRange() {
         betAmountDisplay.textContent = gameData.bet.toString();
     });
 }
-function checkForGameOver() {
+export function checkForGameOver() {
     const answeredQuestions = document.querySelectorAll(".question--answered");
     if (answeredQuestions.length === gameData.numberOfQuestions || gameData.points < 1) {
         renderGameOver();
-        console.error("GAME OVER!");
     }
 }
 function checkForValidBet() {
@@ -131,12 +127,4 @@ function checkForValidBet() {
         bettingSelector.value = gameData.bet.toString();
         betAmountDisplay.textContent = gameData.bet.toString();
     }
-}
-function resetGameData() {
-    gameData.points = 1000;
-    gameData.bet = 100;
-    gameData.multiplier = 1;
-    gameData.countDown = null;
-    gameData.correct_answer = null;
-    gameData.isGameOver = false;
 }

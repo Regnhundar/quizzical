@@ -1,7 +1,7 @@
-import { finalAnswer, handleQuestion } from "../index.js";
+import { checkForGameOver, finalAnswer, handleQuestion } from "../index.js";
 import { gameData } from "../utilities/gameData.js";
 import { getFromSessionStorage } from "../utilities/storageFunctions.js";
-import { fisherYatesShuffle } from "../utilities/utilityFunctions.js";
+import { checkForHighScore, enterHighScore, fisherYatesShuffle, setupHighScores } from "../utilities/utilityFunctions.js";
 export function renderQuestions() {
     const questions = getFromSessionStorage("questions");
     if (!questions || !Array.isArray(questions)) {
@@ -102,6 +102,7 @@ export function renderQuestionResult(isCorrect) {
         multiplier: gameData.multiplier,
         points: gameData.points,
     };
+    console.log("resultInfo", resultInfo);
     // const paragraphElement = document.createElement("h3") as HTMLHeadingElement;
     const dialogContentWrapper = document.querySelector(".selected-question__grid");
     dialogContentWrapper.innerHTML = "";
@@ -117,7 +118,13 @@ export function renderQuestionResult(isCorrect) {
         listItemTitle.id = `recapTitle${i}`;
         listItemTitle.classList.add("question-recap__title");
         const listItemParagraph = document.createElement("p");
-        listItemParagraph.textContent = entry[1].toString();
+        console.log("entry[1]:", entry[1]);
+        if (entry[1]) {
+            listItemParagraph.textContent = entry[1].toString();
+        }
+        else {
+            listItemParagraph.textContent = "ERROR!";
+        }
         listItemParagraph.id = `recapParagraph${i}`;
         listItemParagraph.classList.add("question-recap__paragraph");
         listItem.appendChild(listItemTitle);
@@ -129,6 +136,9 @@ export function renderQuestionResult(isCorrect) {
     button.classList.add("question-recap__button");
     button.addEventListener("click", () => {
         const dialog = document.querySelector("#question");
+        const answeredQuestion = document.querySelector(`article[data-index="${gameData.answeredQuestion}"]`);
+        answeredQuestion?.classList.add("question--answered");
+        checkForGameOver();
         dialog.close();
     });
     dialogContentWrapper.appendChild(titleElement);
@@ -166,8 +176,68 @@ export function renderGameOver() {
     });
     const title = document.createElement("h1");
     title.classList.add("game-over__title");
-    title.textContent = "GAME OVER!";
+    const isHighScore = checkForHighScore();
+    let highScoreWrapper;
+    if (isHighScore) {
+        title.textContent = "NEW HIGH SCORE!";
+        highScoreWrapper = document.createElement("div");
+        highScoreWrapper.classList.add("game-over__input-wrapper");
+        const enterName = document.createElement("input");
+        enterName.placeholder = "ENTER NAME";
+        enterName.min = "1";
+        enterName.max = "15";
+        enterName.classList.add("game-over__input");
+        const sendHighScore = document.createElement("button");
+        sendHighScore.classList.add("game-over__highscore-button");
+        sendHighScore.textContent = "SEND";
+        sendHighScore.addEventListener("click", () => {
+            const player = {
+                name: enterName.value,
+                score: gameData.points,
+            };
+            enterHighScore(player);
+            location.reload();
+        });
+        highScoreWrapper.appendChild(enterName);
+        highScoreWrapper.appendChild(sendHighScore);
+    }
+    else {
+        title.textContent = "GAME OVER!";
+    }
     figure.appendChild(title);
+    if (isHighScore && highScoreWrapper) {
+        figure.appendChild(highScoreWrapper);
+    }
     figure.appendChild(button);
     main.appendChild(figure);
+}
+export function renderHighScores() {
+    let highScores = localStorage.getItem("highScores");
+    if (!highScores) {
+        setupHighScores();
+        highScores = localStorage.getItem("highScores");
+    }
+    const parsedHighScores = JSON.parse(highScores);
+    const sortedHighScores = parsedHighScores.sort((a, b) => b.score - a.score);
+    const highScoresList = document.createElement("ol");
+    highScoresList.classList.add("high-scores");
+    const highScoresTitle = document.createElement("h2");
+    highScoresTitle.classList.add("high-scores__title");
+    highScoresTitle.textContent = "HIGH SCORES:";
+    highScoresList.appendChild(highScoresTitle);
+    sortedHighScores.forEach((highscore) => {
+        const highScoreListItem = document.createElement("li");
+        highScoreListItem.classList.add("high-score__list-item");
+        const highScoreTitle = document.createElement("h3");
+        highScoreTitle.classList.add("high-scores__score-name");
+        highScoreTitle.textContent = highscore.name;
+        const highScoreScore = document.createElement("p");
+        highScoreScore.classList.add("high-scores__score");
+        highScoreScore.textContent = highscore.score.toString();
+        highScoreListItem.appendChild(highScoreTitle);
+        highScoreListItem.appendChild(highScoreScore);
+        highScoresList.appendChild(highScoreListItem);
+    });
+    const main = document.querySelector(".main");
+    main.appendChild(highScoresList);
 }

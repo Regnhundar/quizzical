@@ -5,5 +5,5 @@ export const gameData = {
     multiplier: 1,
     countDown: null,
     correct_answer: null,
-    isGameOver: false,
+    answeredQuestion: null,
 };
